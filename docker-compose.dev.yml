@@ -1,0 +1,122 @@
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - 'redis-data:/data'
+    networks:
+      - app-net
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-net
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - '-q'
+        - '-d'
+        - '${DB_DATABASE}'
+        - '-U'
+        - '${DB_USERNAME}'
+      retries: 3
+      timeout: 5s
+
+  migration:
+    build:
+      context: .
+      target: development
+    command: ["pnpm", "run", "migration:run"]
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - app-net
+
+  evm-listener:
+    container_name: evm-listener
+    build:
+      context: .
+      target: development
+    env_file:
+      - .env
+    environment:
+      - APP_NAME=evm-listener
+      - PORT=3000
+    command: ["pnpm", "run", "start:dev", "evm-listener"]
+    volumes:
+      - ./apps/evm-listener:/app/apps/evm-listener
+      - ./libs:/app/libs
+    depends_on:
+      - redis
+      - postgres
+      - migration
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
+
+  event-processor-scheduler:
+    container_name: event-processor-scheduler
+    build:
+      context: .
+      target: development
+    env_file:
+      - .env
+    environment:
+      - APP_NAME=event-processor-scheduler
+      - PORT=3001
+    command: ["pnpm", "run", "start:dev", "event-processor-scheduler"]
+    volumes:
+      - ./apps/event-processor-scheduler:/app/apps/event-processor-scheduler
+      - ./libs:/app/libs
+    depends_on:
+      - redis
+      - postgres
+      - migration
+    ports:
+      - "3001:3000"
+    networks:
+      - app-net
+
+  evm-transaction-processor:
+    container_name: evm-transaction-processor
+    build:
+      context: .
+      target: development
+    env_file:
+      - .env
+    environment:
+      - APP_NAME=evm-transaction-processor
+      - PORT=3002
+    command: ["pnpm", "run", "start:dev", "evm-transaction-processor"]
+    volumes:
+      - ./apps/evm-transaction-processor:/app/apps/evm-transaction-processor
+      - ./libs:/app/libs
+    depends_on:
+      - redis
+      - postgres
+      - migration
+    ports:
+      - "3002:3000"
+    networks:
+      - app-net
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  app-net:
+    driver: bridge

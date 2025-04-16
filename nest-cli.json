@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/evm-listener/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/evm-listener/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/evm-listener",
+  "projects": {
+    "blockchain": {
+      "type": "library",
+      "root": "libs/blockchain",
+      "entryFile": "index",
+      "sourceRoot": "libs/blockchain/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/blockchain/tsconfig.lib.json"
+      }
+    },
+    "evm-listener": {
+      "type": "application",
+      "root": "apps/evm-listener",
+      "entryFile": "main",
+      "sourceRoot": "apps/evm-listener/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/evm-listener/tsconfig.app.json"
+      }
+    },
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src",
+      "compilerOptions": {
+        "webpack": false,
+        "tsConfigPath": "libs/database/tsconfig.lib.json"
+      }
+    },
+    "event-processor-scheduler": {
+      "type": "application",
+      "root": "apps/event-processor-scheduler",
+      "entryFile": "main",
+      "sourceRoot": "apps/event-processor-scheduler/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/event-processor-scheduler/tsconfig.app.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "evm-transaction-processor": {
+      "type": "application",
+      "root": "apps/evm-transaction-processor",
+      "entryFile": "main",
+      "sourceRoot": "apps/evm-transaction-processor/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/evm-transaction-processor/tsconfig.app.json"
+      }
+    }
+  }
+}

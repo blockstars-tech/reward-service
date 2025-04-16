@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2022",
+    "lib": [
+      "es2022"
+    ],
+    "strict": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@lib/blockchain": [
+        "libs/blockchain/src"
+      ],
+      "@lib/blockchain/*": [
+        "libs/blockchain/src/*"
+      ],
+      "@lib/database": [
+        "libs/database/src"
+      ],
+      "@lib/database/*": [
+        "libs/database/src/*"
+      ],
+      "@lib/shared": [
+        "libs/shared/src"
+      ],
+      "@lib/shared/*": [
+        "libs/shared/src/*"
+      ]
+    }
+  }
+}
